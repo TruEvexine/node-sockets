@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#7357d5">
+    <title>NosotrosPlaticamos</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="app">
+        <header class="header">
+            <div class="brand">
+                <img id="header-avatar" class="hidden" alt="Tu avatar">
+                <div><h1>💬 NosotrosPlaticamos</h1><p class="subtitle">Un espacio para conversar</p></div>
+            </div>
+            <label class="theme-control"><span>Color</span>
+                <select id="theme-select" aria-label="Paleta de colores">
+                    <option value="lavender">Lavanda</option>
+                    <option value="ocean">Océano</option>
+                    <option value="sunset">Atardecer</option>
+                    <option value="forest">Bosque</option>
+                    <option value="berry">Frutos rojos</option>
+                    <option value="sky">Cielo</option>
+                    <option value="citrus">Cítrico</option>
+                    <option value="mint">Menta</option>
+                </select>
+            </label>
+            <button type="button" class="small-button settings-button" id="settings-button">Ajustes</button>
+        </header>
+        <div class="online-users" id="user-list" aria-label="Usuarios conectados">
+            <span class="online-label">En línea</span>
+        </div>
+        <div class="room-bar">
+            <select id="group-selector" aria-label="Chat actual">
+                <option value="general">General</option>
+            </select>
+            <label class="filter-setting" title="Censura las palabras ofensivas">
+                <input type="checkbox" id="filter-toggle" checked>
+                <span>Filtro</span>
+            </label>
+            <button type="button" class="small-button" id="create-group-btn">＋ Grupo</button>
+        </div>
+        <div class="room-status" id="current-group" aria-live="polite">Chat general</div>
+        <ul id="messages" aria-live="polite"></ul>
+        <div class="composer">
+            <div class="emoji-row" aria-label="Emojis">
+                <button class="emoji-button" type="button" aria-label="Agregar 😀">😀</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 😂">😂</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🥹">🥹</button>
+                <button class="emoji-button" type="button" aria-label="Agregar ❤️">❤️</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🐱">🐱</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🐶">🐶</button>
+                <button class="emoji-button" type="button" aria-label="Agregar ✨">✨</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 👀">👀</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🐾">🐾</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 😻">😻</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🫶">🫶</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🌈">🌈</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🌸">🌸</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🎉">🎉</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🔥">🔥</button>
+                <button class="emoji-button" type="button" aria-label="Agregar 🤍">🤍</button>
+            </div>
+            <form id="form">
+                <input id="input" maxlength="1000" autocomplete="off" placeholder="Escribe un mensaje..." aria-label="Mensaje">
+                <button class="send-button" type="submit">Enviar</button>
+            </form>
+        </div>
+    </main>
+    <div class="login-modal" id="login-modal">
+        <form class="login-card" id="join-form">
+            <div class="profile-preview" id="profile-preview"></div>
+            <h2>¡Bienvenido al chat!</h2>
+            <p>Entra con un nickname. No necesitas crear una cuenta.</p>
+            <input id="username-input" type="text" placeholder="Tu nickname" maxlength="20" autocomplete="nickname" required>
+            <input id="avatar-input" type="url" placeholder="URL de imagen (opcional)" aria-label="URL de avatar">
+            <button class="join-button" type="submit">Unirme al chat</button>
+        </form>
+    </div>
+    <dialog class="chat-dialog" id="settings-dialog">
+        <form method="dialog" class="dialog-header">
+            <div><h2>Ajustes y privacidad</h2><p>Controles de esta sesión anónima</p></div>
+            <button class="dialog-close" aria-label="Cerrar ajustes">×</button>
+        </form>
+        <div class="dialog-body">
+            <label class="setting-row"><span><strong>Mensajes directos</strong><small>Permite que otros usuarios te escriban en privado.</small></span><input type="checkbox" id="allow-dms-toggle" checked></label>
+            <label class="setting-row"><span><strong>Notificaciones del navegador</strong><small>Avisa de mensajes privados aunque tengas otra pestaña activa.</small></span><input type="checkbox" id="browser-notifications-toggle"></label>
+            <label class="setting-row"><span><strong>Sonido de mensajes</strong><small>Reproduce un aviso discreto al recibir un mensaje privado.</small></span><input type="checkbox" id="message-sound-toggle"></label>
+            <section id="group-settings-panel" class="settings-section hidden">
+                <h3>Ajustes del grupo</h3>
+                <label class="setting-row"><span><strong>Grupo privado</strong><small>Solo los miembros podrán entrar; usa invitaciones para agregarlos.</small></span><input type="checkbox" id="private-group-toggle"></label>
+                <label class="setting-row"><span><strong>Permitir invitaciones</strong><small>Los miembros pueden invitar usuarios conectados.</small></span><input type="checkbox" id="group-invites-toggle"></label>
+                <label class="setting-row"><span><strong>Historial máximo</strong><small>Mensajes recientes que conserva este grupo mientras el servidor está activo.</small></span><select id="group-retention-select" aria-label="Límite del historial del grupo"><option value="50">50 mensajes</option><option value="200">200 mensajes</option><option value="500">500 mensajes</option></select></label>
+                <div id="moderator-controls" class="moderator-controls hidden">
+                    <h3>Moderadores</h3>
+                    <p class="settings-note">Los moderadores pueden cambiar el filtro y retirar mensajes. El propietario conserva el control del grupo.</p>
+                    <div class="moderator-assignment"><select id="moderator-select" aria-label="Usuario para moderar"></select><button type="button" class="small-button" id="moderator-toggle">Hacer moderador</button></div>
+                </div>
+                <div id="reports-panel" class="hidden">
+                    <h3>Mensajes reportados</h3>
+                    <ul id="reports-list" class="reports-list"></ul>
+                </div>
+            </section>
+            <section class="settings-section">
+                <h3>Usuarios silenciados</h3>
+                <p class="settings-note">Sus mensajes se ocultan solo para ti. Puedes volver a mostrarlos cuando quieras.</p>
+                <ul id="muted-users-list" class="blocked-users-list"></ul>
+            </section>
+            <section class="settings-section">
+                <h3>Usuarios bloqueados</h3>
+                <p class="settings-note">Las personas bloqueadas no pueden enviarte mensajes directos ni invitaciones, y sus mensajes no aparecerán en tu chat.</p>
+                <ul id="blocked-users-list" class="blocked-users-list"></ul>
+            </section>
+            <p class="privacy-note">Sin cuentas, el bloqueo, los silencios y las preferencias se guardan en este navegador. Se pueden perder si borras sus datos.</p>
+        </div>
+    </dialog>
+    <dialog class="direct-dialog" id="direct-dialog" aria-label="Conversación privada">
+        <div class="dialog-header">
+            <div><h2 id="direct-title">Mensaje directo</h2><p>Solo tú y esta persona pueden verlo.</p></div>
+            <button type="button" class="dialog-close" id="close-direct" aria-label="Cerrar mensaje directo">×</button>
+        </div>
+        <ul id="direct-messages" class="direct-messages"></ul>
+        <form id="direct-form" class="direct-form">
+            <input id="direct-input" maxlength="1000" autocomplete="off" placeholder="Escribe un mensaje privado..." aria-label="Mensaje privado">
+            <button class="send-button" type="submit">Enviar</button>
+        </form>
+    </dialog>
+    <dialog class="chat-dialog invitation-dialog" id="invitation-dialog">
+        <div class="dialog-header">
+            <div><h2>Invitación a un grupo</h2><p id="invitation-copy"></p></div>
+        </div>
+        <div class="invitation-actions">
+            <button type="button" class="small-button" id="decline-invitation">Ahora no</button>
+            <button type="button" class="send-button" id="accept-invitation">Unirme</button>
+        </div>
+    </dialog>
+    <div id="chat-toast" class="chat-toast" role="status" aria-live="polite"></div>
+    <aside id="direct-dock" class="direct-dock" aria-label="Conversaciones privadas"></aside>
+    <script src="/api/socket-io/socket.io/socket.io.js"></script>
+    <script src="/avatars.js"></script>
+    <script src="/app.js"></script>
+</body>
+</html>
