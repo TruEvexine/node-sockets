@@ -2,7 +2,7 @@
 
 Chat en tiempo real con sala general y grupos, nickname sin cuenta, avatar opcional, filtro de lenguaje, paletas de color y acceso rápido a emojis. Incluye conversaciones privadas en burbujas flotantes con contador de mensajes pendientes, notificaciones del navegador opcionales, moderación de grupos, controles anti-spam y un historial reciente configurable. El avatar aleatorio se genera una sola vez en la vista previa y se conserva al entrar al chat; incluye variantes distinguibles de gato y pibble con accesorios.
 
-La estructura visual está separada: el marcado está en `public/index.html`, los estilos en `public/styles.css` y el comportamiento en `public/app.js`. En Vercel, `server.js` exporta la aplicación Express que sirve la página principal; `api/socket-io.js` atiende la conexión Socket.IO.
+La estructura visual está separada: el marcado está en `public/index.html`, los estilos en `public/styles.css` y el comportamiento en `public/app.js`. El cliente de Socket.IO estático se incluye en `public/socket.io.js` (MIT, versión 4.8.4). En Vercel, `public/` sirve los recursos estáticos y `api/socket-io/socket.io.js` atiende Socket.IO en `/api/socket-io/socket.io`; el cliente conecta por WebSocket sin añadir una barra final.
 
 ## Ejecutar en local
 

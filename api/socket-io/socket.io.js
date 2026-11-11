@@ -1,4 +1,4 @@
-const { createChatServer } = require("../server");
+const { createChatServer } = require("../../server");
 
 const { server } = createChatServer({
     serveStatic: false,

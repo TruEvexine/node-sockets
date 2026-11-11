@@ -58,7 +58,7 @@ function createChatServer({
 } = {}) {
     const app = createWebApp({ serveStatic });
     const server = http.createServer(app);
-    const io = new Server(server, { path: socketPath });
+    const io = new Server(server, { path: socketPath, addTrailingSlash: false });
     const users = new Map();
     const groups = new Map([
         ["general", {

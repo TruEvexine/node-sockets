@@ -1,5 +1,6 @@
 const socket = io({
     path: "/api/socket-io/socket.io",
+    addTrailingSlash: false,
     transports: ["websocket"]
 });
 const groupNames = new Set(["general"]);

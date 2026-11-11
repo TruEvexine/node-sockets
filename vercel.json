@@ -1,6 +1,7 @@
 {
+  "framework": null,
   "functions": {
-    "api/socket-io.js": {
+    "api/socket-io/socket.io.js": {
       "maxDuration": 300
     }
   }
