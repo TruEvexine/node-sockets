@@ -96,6 +96,38 @@ const reportsList = document.getElementById("reports-list");
 const directDock = document.getElementById("direct-dock");
 const toast = document.getElementById("chat-toast");
 
+function updateMobileViewport() {
+    if (!window.matchMedia("(max-width: 600px)").matches) {
+        document.documentElement.style.removeProperty("--mobile-viewport-height");
+        document.documentElement.style.removeProperty("--mobile-viewport-offset");
+        return;
+    }
+    const viewport = window.visualViewport;
+    document.documentElement.style.setProperty(
+        "--mobile-viewport-height",
+        `${viewport?.height || window.innerHeight}px`
+    );
+    document.documentElement.style.setProperty(
+        "--mobile-viewport-offset",
+        `${viewport?.offsetTop || 0}px`
+    );
+}
+
+updateMobileViewport();
+window.addEventListener("resize", updateMobileViewport);
+window.visualViewport?.addEventListener("resize", updateMobileViewport);
+window.visualViewport?.addEventListener("scroll", updateMobileViewport);
+document.addEventListener("focusin", (event) => {
+    if (event.target.matches("#input, #direct-input")) document.documentElement.classList.add("mobile-input-focused");
+});
+document.addEventListener("focusout", () => {
+    requestAnimationFrame(() => {
+        const activeElement = document.activeElement;
+        if (activeElement.matches("#input, #direct-input")) return;
+        document.documentElement.classList.remove("mobile-input-focused");
+    });
+});
+
 saveStoredValue("chat-client-id", clientId);
 allowDmsToggle.checked = allowDirectMessages;
 browserNotificationsToggle.checked = browserNotificationsEnabled;
