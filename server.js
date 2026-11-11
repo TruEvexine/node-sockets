@@ -34,6 +34,15 @@ function safeAvatar(value) {
 
 function createWebApp({ serveStatic = true } = {}) {
     const app = express();
+    const socketClientPath = path.join(
+        path.dirname(require.resolve("socket.io")),
+        "../client-dist/socket.io.js"
+    );
+    app.get("/socket.io.js", (request, response, next) => {
+        response.sendFile(socketClientPath, (error) => {
+            if (error) next(error);
+        });
+    });
     app.get("/", (request, response, next) => {
         response.sendFile(path.join(__dirname, "public", "index.html"), (error) => {
             if (error) next(error);

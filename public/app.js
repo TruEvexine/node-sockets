@@ -36,6 +36,7 @@ let currentGroup = "general";
 let connectedUsers = [];
 let pendingGroupName = "";
 let joinedProfile = null;
+let profileReceived = false;
 let avatarSeed = crypto.randomUUID();
 let clientId = readStoredValue("chat-client-id", "") || crypto.randomUUID();
 let allowDirectMessages = readStoredValue("chat-allow-dms", true) !== false;
@@ -61,6 +62,8 @@ const loginModal = document.getElementById("login-modal");
 const joinForm = document.getElementById("join-form");
 const usernameInput = document.getElementById("username-input");
 const avatarInput = document.getElementById("avatar-input");
+const loginStatus = document.getElementById("login-status");
+const joinButton = document.getElementById("join-button");
 const profilePreview = document.getElementById("profile-preview");
 const headerAvatar = document.getElementById("header-avatar");
 const userList = document.getElementById("user-list");
@@ -577,9 +580,10 @@ joinForm.addEventListener("submit", (event) => {
         allowDirectMessages,
         blockedUsers: blockedUsers.map((user) => user.id)
     };
-    socket.emit("user-join", joinedProfile);
-    loginModal.classList.add("hidden");
-    input.focus();
+    joinButton.disabled = true;
+    loginStatus.textContent = "Conectando al chat...";
+    loginStatus.classList.remove("hidden");
+    if (socket.connected) socket.emit("user-join", joinedProfile);
 });
 
 form.addEventListener("submit", (event) => {
@@ -742,6 +746,7 @@ try {
 }
 
 socket.on("profile", (profile) => {
+    profileReceived = true;
     clientId = profile.clientId;
     saveStoredValue("chat-client-id", clientId);
     allowDirectMessages = profile.allowDirectMessages;
@@ -749,6 +754,10 @@ socket.on("profile", (profile) => {
     avatarSeed = profile.avatarSeed;
     useAvatar(headerAvatar, profile.avatar, profile.username, profile.avatarSeed);
     headerAvatar.classList.remove("hidden");
+    loginModal.classList.add("hidden");
+    joinButton.disabled = false;
+    loginStatus.classList.add("hidden");
+    input.focus();
 });
 
 socket.on("connect", () => {
@@ -757,6 +766,14 @@ socket.on("connect", () => {
     pendingMessages = [];
     socket.emit("user-join", joinedProfile);
     if (currentGroup !== "general") socket.emit("join-group", currentGroup);
+});
+
+socket.on("connect_error", (error) => {
+    if (joinedProfile && !profileReceived) {
+        loginStatus.textContent = "No se pudo conectar. Reintentando…";
+        loginStatus.classList.remove("hidden");
+    }
+    console.warn("No se pudo conectar al servidor del chat.", error);
 });
 
 socket.on("message-history", ({ group, messages: previousMessages }) => {
@@ -879,5 +896,10 @@ socket.on("message-removed", (messageId) => {
 
 socket.on("chat-error", (message) => {
     showToast(message);
-    if (!usernameInput.value) loginModal.classList.remove("hidden");
+    if (joinedProfile && !profileReceived) {
+        loginModal.classList.remove("hidden");
+        loginStatus.textContent = message;
+        loginStatus.classList.remove("hidden");
+        joinButton.disabled = false;
+    }
 });

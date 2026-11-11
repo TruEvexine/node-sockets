@@ -201,6 +201,8 @@ h1 { margin: 0; font-size: 1.15rem; }
 .profile-preview img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .login-card input { width: 100%; margin: 6px 0; padding: 12px 14px; border: 1px solid #e3e0eb; border-radius: 11px; }
 .login-card .join-button { width: 100%; margin-top: 10px; }
+.login-card .join-button:disabled { opacity: .7; cursor: wait; }
+.login-status { margin: 10px 0 0 !important; color: var(--accent-dark) !important; font-size: .82rem !important; text-align: center; }
 .hidden { display: none !important; }
 .chat-dialog {
     width: min(94vw, 480px);
