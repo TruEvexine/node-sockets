@@ -240,46 +240,46 @@ function syncProfileSettings() {
             blockedUsers: blockedUsers.map((user) => user.id)
         });
     }
+}
 
-    function toggleMutedUser(user) {
-        if (isMuted(user.clientId)) {
-            mutedUsers = mutedUsers.filter((entry) => entry.id !== user.clientId);
-            showToast(`${user.username} ya no está silenciado.`);
-            socket.emit("join-group", currentGroup);
-        } else {
-            mutedUsers.push({ id: user.clientId, username: user.username });
-            messages.querySelectorAll(".message-item").forEach((item) => {
-                if (item.dataset.senderId === user.clientId) item.remove();
-            });
-            showToast(`${user.username} quedó silenciado solo para ti.`);
-        }
-        syncProfileSettings();
-        renderMutedUsers();
-        renderUsers();
-    }
-
-    function renderMutedUsers() {
-        mutedUsersList.replaceChildren();
-        if (!mutedUsers.length) {
-            const empty = document.createElement("li");
-            empty.className = "empty-list";
-            empty.textContent = "No has silenciado a nadie.";
-            mutedUsersList.append(empty);
-            return;
-        }
-        mutedUsers.forEach((user) => {
-            const item = document.createElement("li");
-            const name = document.createElement("span");
-            name.textContent = user.username;
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = "user-action";
-            button.textContent = "Activar";
-            button.addEventListener("click", () => toggleMutedUser({ clientId: user.id, username: user.username }));
-            item.append(name, button);
-            mutedUsersList.append(item);
+function toggleMutedUser(user) {
+    if (isMuted(user.clientId)) {
+        mutedUsers = mutedUsers.filter((entry) => entry.id !== user.clientId);
+        showToast(`${user.username} ya no está silenciado.`);
+        socket.emit("join-group", currentGroup);
+    } else {
+        mutedUsers.push({ id: user.clientId, username: user.username });
+        messages.querySelectorAll(".message-item").forEach((item) => {
+            if (item.dataset.senderId === user.clientId) item.remove();
         });
+        showToast(`${user.username} quedó silenciado solo para ti.`);
     }
+    syncProfileSettings();
+    renderMutedUsers();
+    renderUsers();
+}
+
+function renderMutedUsers() {
+    mutedUsersList.replaceChildren();
+    if (!mutedUsers.length) {
+        const empty = document.createElement("li");
+        empty.className = "empty-list";
+        empty.textContent = "No has silenciado a nadie.";
+        mutedUsersList.append(empty);
+        return;
+    }
+    mutedUsers.forEach((user) => {
+        const item = document.createElement("li");
+        const name = document.createElement("span");
+        name.textContent = user.username;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "user-action";
+        button.textContent = "Activar";
+        button.addEventListener("click", () => toggleMutedUser({ clientId: user.id, username: user.username }));
+        item.append(name, button);
+        mutedUsersList.append(item);
+    });
 }
 
 function renderBlockedUsers() {
