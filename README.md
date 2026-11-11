@@ -2,7 +2,7 @@
 
 Chat en tiempo real con sala general y grupos, nickname sin cuenta, avatar opcional, filtro de lenguaje, paletas de color y acceso rápido a emojis. Incluye conversaciones privadas en burbujas flotantes con contador de mensajes pendientes, notificaciones del navegador opcionales, moderación de grupos, controles anti-spam y un historial reciente configurable. El avatar aleatorio se genera una sola vez en la vista previa y se conserva al entrar al chat; incluye variantes distinguibles de gato y pibble con accesorios.
 
-La estructura visual está separada: el marcado está en `public/index.html`, los estilos en `public/styles.css` y el comportamiento en `public/app.js`.
+La estructura visual está separada: el marcado está en `public/index.html`, los estilos en `public/styles.css` y el comportamiento en `public/app.js`. En Vercel, `server.js` exporta la aplicación Express que sirve la página principal; `api/socket-io.js` atiende la conexión Socket.IO.
 
 ## Ejecutar en local
 

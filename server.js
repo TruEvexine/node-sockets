@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const crypto = require("crypto");
+const path = require("path");
 const { Server } = require("socket.io");
 const createChatAvatar = require("./public/avatars");
 
@@ -31,11 +32,22 @@ function safeAvatar(value) {
     }
 }
 
+function createWebApp({ serveStatic = true } = {}) {
+    const app = express();
+    app.get("/", (request, response, next) => {
+        response.sendFile(path.join(__dirname, "public", "index.html"), (error) => {
+            if (error) next(error);
+        });
+    });
+    if (serveStatic) app.use(express.static(path.join(__dirname, "public")));
+    return app;
+}
+
 function createChatServer({
     serveStatic = true,
     socketPath = "/api/socket-io/socket.io"
 } = {}) {
-    const app = express();
+    const app = createWebApp({ serveStatic });
     const server = http.createServer(app);
     const io = new Server(server, { path: socketPath });
     const users = new Map();
@@ -57,8 +69,6 @@ function createChatServer({
     const directMessages = new Map();
     const invitations = new Map();
     const messageActivity = new Map();
-
-    if (serveStatic) app.use(express.static("public"));
 
     function publicGroup(group, user) {
         return {
@@ -673,4 +683,7 @@ if (require.main === module) {
     });
 }
 
-module.exports = { createChatServer, censorMessage, safeAvatar };
+module.exports = createWebApp({ serveStatic: false });
+module.exports.createChatServer = createChatServer;
+module.exports.censorMessage = censorMessage;
+module.exports.safeAvatar = safeAvatar;
